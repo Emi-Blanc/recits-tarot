@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tirez trois cartes gratuitement pour éclairer une situation : ce qui vous porte, ce qui vous freine, la direction à explorer.">
+    <title>Tirage du Jour — Les Récits du Tarot</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23000'/%3E%3Ctext x='32' y='45' font-family='Georgia, serif' font-size='38' fill='%23fff' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header-nav" id="main-header">
+        <a href="index.html"><img src="Assets/LOGrT.png" alt="Retour Accueil" class="mini-logo" onerror="this.style.display='none'"></a>
+
+        <nav class="top-nav-right">
+            <a href="apropos.html" class="nav-sub-item">À Propos</a>
+            <a href="histoire.html" class="nav-sub-item">Histoire</a>
+            <a href="ateliers.html" class="nav-sub-item">Ateliers</a>
+            <a href="tirage.html" class="nav-sub-item nav-active">Tirage</a>
+            <a href="faq.html" class="nav-sub-item">FAQ</a>
+            <a href="contact.html" class="nav-sub-item">Contact</a>
+        </nav>
+    </header>
+    <main>
+        <section id="tirage" class="page active">
+            <div class="tarot-layout">
+                <h1 class="page-title">Tirage du Jour</h1>
+                <p class="tirage-intro">Prenez un instant, posez une question ou laissez simplement l'esprit se poser. Tirez trois cartes pour éclairer une situation : ce qui vous porte, ce qui vous freine, et la direction à explorer.</p>
+                <div class="tirage-action-box">
+                    <button class="btn-general" id="btn-tirage">Tirer les cartes</button>
+                </div>
+                <div class="tirage-result-grid" id="tirage-result"></div>
+            </div>
+        </section>
+    </main>
+        <div id="card-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close-modal" tabindex="0" role="button" aria-label="Fermer">&times;</span>
+                <div class="modal-body" id="modal-body">
+                    <div class="modal-image-container" id="modal-img-wrapper">
+                        <img id="modal-card-img" src="Assets/LOGrT.png" alt="Visuel" onerror="this.style.display='none'">
+                    </div>
+                    <div class="modal-text-container">
+                        <h2 id="modal-card-title">Nom</h2>
+                        <h3 id="modal-card-keyword">Mot-clé</h3>
+                        <p id="modal-card-description">Explication...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="btn-back-to-top" aria-label="Retour en haut">↑</button>
+    <footer class="site-footer">
+        <span>© 2026 Les Récits du Tarot</span>
+        <span class="footer-links">
+            <a href="mentions.html">Mentions légales</a>
+            <a href="confidentialite.html">Politique de confidentialité</a>
+        </span>
+    </footer>
+    <script src="script.js"></script>
+    <script>
+const ARCANES_MAJ = [
+    { nom: "Le Mat", img: "0fou.jpeg", mot: "l'Inconnu", sens: "Un saut dans l'inconnu, la liberté totale et l'élan spontané.", texte: "" },
+    { nom: "Le Bateleur", img: "1bateleur.jpeg", mot: "l'Initiative", sens: "Le début d'un cycle, tu as tous les outils pour réussir.", texte: "" },
+    { nom: "La Papesse", img: "2papesse.jpeg", mot: "l'Intuition", sens: "Le temps de la réflexion et de l'écoute de ton intuition.", texte: "" },
+    { nom: "L'Impératrice", img: "3imperatrice.jpeg", mot: "la Créativité", sens: "La créativité en action, l'abondance et la naissance d'idées.", texte: "" },
+    { nom: "L'Empereur", img: "4empereur.jpeg", mot: "la Structure", sens: "La structure, l'autorité et la concrétisation de tes projets.", texte: "" },
+    { nom: "Le Pape", img: "5pape.jpeg", mot: "la Sagesse", sens: "La transmission, le conseil et la recherche de sens.", texte: "" },
+    { nom: "L'Amoureux", img: "6amoureux.jpeg", mot: "le Choix", sens: "Un choix important à faire avec le cœur.", texte: "" },
+    { nom: "Le Chariot", img: "7chariot.jpeg", mot: "le Succès", sens: "Le succès, la maîtrise et la détermination vers ton but.", texte: "" },
+    { nom: "La Force", img: "8force.jpeg", mot: "la Maîtrise", sens: "Le courage et la maîtrise de tes instincts par la douceur.", texte: "" },
+    { nom: "L'Hermite", img: "9ermite.jpeg", mot: "la Prudence", sens: "Une période de retrait nécessaire pour trouver ta propre lumière.", texte: "" },
+    { nom: "La Roue", img: "10roue.jpeg", mot: "le Destin", sens: "Un tournant du destin, les cycles de la vie qui tournent.", texte: "" },
+    { nom: "La Justice", img: "11justice.jpeg", mot: "l'Équilibre", sens: "L'équilibre, la vérité et l'intégrité dans tes décisions.", texte: "" },
+    { nom: "Le Pendu", img: "12pendu.jpeg", mot: "le Lâcher-prise", sens: "Un temps d'arrêt, voir les choses sous un autre angle.", texte: "" },
+    { nom: "La Mort", img: "13mort.jpeg", mot: "la Transition", sens: "Une transformation profonde, la fin d'un cycle pour un renouveau.", texte: "" },
+    { nom: "La Tempérance", img: "14temperance.jpeg", mot: "l'Harmonie", sens: "L'équilibre, la patience et la guérison par la modération.", texte: "" },
+    { nom: "Le Diable", img: "15diable.jpeg", mot: "l'Attachement", sens: "Tes passions, tes attachements ou tes peurs intérieures.", texte: "" },
+    { nom: "La Maison Dieu", img: "16tour.jpeg", mot: "le Changement", sens: "Un bouleversement soudain qui libère des structures fragiles.", texte: "" },
+    { nom: "L'Étoile", img: "17etoile.jpeg", mot: "l'Espoir", sens: "L'espoir, la sérénité et la protection bienveillante.", texte: "" },
+    { nom: "La Lune", img: "18lune.jpeg", mot: "l'Inconscient", sens: "Les rêves, les émotions floues et les mystères de l'inconscient.", texte: "" },
+    { nom: "Le Soleil", img: "19soleil.jpeg", mot: "la Clarté", sens: "La clarté, le bonheur partagé et le rayonnement personnel.", texte: "" },
+    { nom: "Le Jugement", img: "20jugement.jpeg", mot: "l'Éveil", sens: "Une renaissance, un appel intérieur et une libération.", texte: "" },
+    { nom: "Le Monde", img: "21monde.jpeg", mot: "l'Accomplissement", sens: "L'accomplissement total, l'harmonie et l'ouverture au monde.", texte: "" }
+];
+
+function tirerCartes() {
+    const positions = ["Ce qui vous porte", "Ce qui vous freine", "La direction à explorer"];
+    const melange = [...ARCANES_MAJ].sort(() => Math.random() - 0.5).slice(0, 3);
+    const resultBox = document.getElementById('tirage-result');
+    resultBox.innerHTML = melange.map((carte, i) => `
+        <div class="tirage-colonne">
+            <span class="tirage-badge">${positions[i]}</span>
+            ${createCardHTML(carte.nom, `Assets/cardMaj/${carte.img}`, carte.mot, carte.sens, carte.texte)}
+        </div>`).join('');
+}
+
+document.addEventListener('click', (e) => {
+    if (e.target.id === 'btn-tirage') tirerCartes();
+});
+    </script>
+</body>
+</html>

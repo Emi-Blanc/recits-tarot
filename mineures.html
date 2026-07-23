@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Arcanes Mineures — Espace Cours</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <script src="access.js"></script>
+</head>
+<body>
+    <header class="header-nav" id="main-header">
+        <a href="../index.html"><img src="../Assets/LOGrT.png" alt="Retour Accueil" class="mini-logo" onerror="this.style.display='none'"></a>
+        <nav class="top-nav-right">
+            <a href="majeures.html" class="nav-sub-item">Arcanes Majeures</a>
+            <a href="mineures.html" class="nav-sub-item nav-active">Arcanes Mineures</a>
+            <a href="numerologie.html" class="nav-sub-item">Numérologie</a>
+            <a href="../index.html" class="nav-sub-item">Retour au site</a>
+        </nav>
+    </header>
+    <main>
+        <section class="page active">
+            <div class="tarot-layout">
+                <h1 class="page-title">Les Arcanes Mineures</h1>
+                <div id="mineurs-container"></div>
+            </div>
+        </section>
+    </main>
+        <div id="card-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close-modal" tabindex="0" role="button" aria-label="Fermer">&times;</span>
+                <div class="modal-body" id="modal-body">
+                    <div class="modal-image-container" id="modal-img-wrapper">
+                        <img id="modal-card-img" src="../Assets/LOGrT.png" alt="Visuel" onerror="this.style.display='none'">
+                    </div>
+                    <div class="modal-text-container">
+                        <h2 id="modal-card-title">Nom</h2>
+                        <h3 id="modal-card-keyword">Mot-clé</h3>
+                        <p id="modal-card-description">Explication...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="btn-back-to-top" aria-label="Retour en haut">↑</button>
+    <footer class="site-footer">
+        <span>© 2026 Les Récits du Tarot</span>
+        <span class="footer-links">
+            <a href="../mentions.html">Mentions légales</a>
+            <a href="../confidentialite.html">Politique de confidentialité</a>
+        </span>
+    </footer>
+    <script src="../script.js"></script>
+    <script>
+const MINEURS_CONFIG = {
+    suites: ["epee", "coupe", "baton", "denier"],
+    titres: ["Épées", "Coupes", "Bâtons", "Deniers"],
+    noms: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "valet", "cavalier", "reine", "roi"],
+    mots: {
+        epee: ["Potentiel", "Choix", "Douleur", "Repos", "Conflit", "Passage", "Trahison", "Déni", "Angoisse", "Fin", "Apprentissage", "Mouvement", "Maîtrise", "Autorité"],
+        coupe: ["Étincelle", "Rencontre", "Fête", "Retrait", "Deuil", "Nostalgie", "Rêverie", "Départ", "Satisfaction", "Bonheur", "Apprentissage", "Mouvement", "Maîtrise", "Autorité"],
+        baton: ["Action", "Projet", "Élan", "Succès", "Concurrence", "Victoire", "Défense", "Vitesse", "Résilience", "Responsabilité", "Apprentissage", "Mouvement", "Maîtrise", "Autorité"],
+        denier: ["Graine", "Équilibre", "Reconnaissance", "Ancrage", "Perte", "Aide", "Investissement", "Savoir-faire", "Profit", "Transmission", "Apprentissage", "Mouvement", "Maîtrise", "Autorité"]
+    },
+    textes: {
+        epee:   ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        coupe:  ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        baton:  ["", "", "", "", "", "", "", "", "", "", "", "", "", ""],
+        denier: ["", "", "", "", "", "", "", "", "", "", "", "", "", ""]
+    }
+};
+
+window.addEventListener('DOMContentLoaded', () => {
+    const mineursContainer = document.getElementById('mineurs-container');
+    if (mineursContainer) {
+        MINEURS_CONFIG.suites.forEach((suite, idx) => {
+            let suiteHTML = `<h2 class="suite-title">${MINEURS_CONFIG.titres[idx]}</h2>`;
+
+            suiteHTML += `<div class="sub-grid-numbers">`;
+            MINEURS_CONFIG.noms.slice(0, 5).forEach((nom, i) => {
+                const mot = MINEURS_CONFIG.mots[suite][i];
+                const texte = MINEURS_CONFIG.textes[suite][i];
+                suiteHTML += createCardHTML(`${nom} de ${suite}`, `../Assets/cardMin/${suite}_${nom}.jpg`, mot, "", texte, suite);
+            });
+            suiteHTML += `</div>`;
+
+            suiteHTML += `<div class="sub-grid-numbers">`;
+            MINEURS_CONFIG.noms.slice(5, 10).forEach((nom, i) => {
+                const mot = MINEURS_CONFIG.mots[suite][i + 5];
+                const texte = MINEURS_CONFIG.textes[suite][i + 5];
+                suiteHTML += createCardHTML(`${nom} de ${suite}`, `../Assets/cardMin/${suite}_${nom}.jpg`, mot, "", texte, suite);
+            });
+            suiteHTML += `</div>`;
+
+            suiteHTML += `<div class="sub-grid-honors">`;
+            MINEURS_CONFIG.noms.slice(10).forEach((nom, i) => {
+                const mot = MINEURS_CONFIG.mots[suite][i + 10];
+                const texte = MINEURS_CONFIG.textes[suite][i + 10];
+                const nomAffiche = nom.charAt(0).toUpperCase() + nom.slice(1);
+                suiteHTML += createCardHTML(`${nomAffiche} de ${suite}`, `../Assets/cardMin/${suite}_${nom}.jpg`, mot, "", texte, suite);
+            });
+            suiteHTML += `</div>`;
+
+            mineursContainer.innerHTML += suiteHTML;
+        });
+    }
+});
+    </script>
+</body>
+</html>
